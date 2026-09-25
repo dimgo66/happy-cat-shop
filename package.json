@@ -1,0 +1,18 @@
+{
+  "name": "happy-cat-shop",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Интернет-магазин «Счастливый котик»: музыкальные и художественные товары, с админкой",
+  "scripts": {
+    "start": "node tools/serve.cjs",
+    "serve": "node tools/serve.cjs",
+    "images": "node tools/generate-images.js",
+    "test": "node tools/smoke-test.cjs",
+    "test:admin": "node tools/admin-test.cjs",
+    "test:admin-ui": "node tools/admin-browser-test.cjs",
+    "test:layout": "node tools/check-layout.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}

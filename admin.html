@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Админка — Счастливый котик</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="admin">
+
+  <div class="admin-bar">
+    <div class="container admin-bar__inner">
+      <span class="admin-bar__title">🐱 Счастливый котик — админка</span>
+      <span class="badge-state" id="save-mode">проверяю сервер…</span>
+      <span class="admin-bar__spacer"></span>
+      <a class="btn btn--ghost" href="index.html" target="_blank" rel="noopener">Открыть витрину ↗</a>
+      <button class="btn btn--ghost" type="button" id="reload-data">Перечитать данные</button>
+    </div>
+  </div>
+
+  <main class="page">
+    <div class="container">
+
+      <div class="page__head">
+        <div class="breadcrumbs"><a href="index.html">Главная</a> / Админка</div>
+        <h1>Управление магазином</h1>
+        <p style="color:var(--muted)">
+          Меняйте товары, цены и наличие прямо здесь. Изменения сразу видны на витрине,
+          а кнопка «Сохранить» записывает их в файл <code>assets/js/catalog.js</code>.
+        </p>
+      </div>
+
+      <div id="status-note"></div>
+
+      <!-- Настройки магазина -->
+      <section class="admin-section">
+        <h2>🏪 Настройки магазина</h2>
+        <p class="admin-section__hint">Название, контакты и условия доставки.</p>
+        <div class="admin-fields" id="shop-fields"></div>
+      </section>
+
+      <!-- Категории -->
+      <section class="admin-section">
+        <h2>🗂 Категории</h2>
+        <p class="admin-section__hint">Разделы каталога. Товар ссылается на категорию по id.</p>
+        <div id="categories-box"></div>
+        <p style="margin:14px 0 0">
+          <button class="btn btn--ghost" type="button" id="add-category">+ Добавить категорию</button>
+        </p>
+      </section>
+
+      <!-- Товары -->
+      <section class="admin-section">
+        <h2>📦 Товары</h2>
+        <p class="admin-section__hint">
+          Цена, наличие и скидка правятся прямо в таблице. Название, описание и характеристики —
+          по кнопке «✎» в строке товара.
+        </p>
+
+        <div class="admin-toolbar">
+          <input class="search" type="search" id="admin-search" placeholder="Поиск по названию или id…" aria-label="Поиск по товарам">
+          <select class="sort" id="admin-filter" aria-label="Фильтр по категории"></select>
+          <span id="admin-count" style="color:var(--muted);font-size:.9rem"></span>
+          <span style="margin-left:auto"></span>
+          <button class="btn btn--primary" type="button" id="add-product">+ Добавить товар</button>
+        </div>
+
+        <div class="products-wrap">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th class="col-img">Фото</th>
+                <th>Название</th>
+                <th>Категория</th>
+                <th class="col-num">Цена, ₽</th>
+                <th class="col-num">Старая цена</th>
+                <th class="col-num">Остаток</th>
+                <th class="col-act" title="Изменить">✎</th>
+                <th class="col-act" title="Удалить">🗑</th>
+              </tr>
+            </thead>
+            <tbody id="products-body"></tbody>
+          </table>
+        </div>
+        <p id="products-empty" class="empty" hidden>
+          <span class="empty__icon">🐾</span><br>Ничего не найдено — измените фильтр или поиск.
+        </p>
+      </section>
+
+      <!-- Редактор товара -->
+      <section class="admin-section" id="editor-section" hidden>
+        <h2 id="editor-title">Редактирование товара</h2>
+        <div class="admin-fields">
+          <div class="field">
+            <label for="e-id">id (латиница, цифры, - и _)</label>
+            <input id="e-id" type="text" placeholder="g-05">
+            <span class="field__hint">По id строится адрес товара и имя файла картинки.</span>
+          </div>
+          <div class="field field--wide">
+            <label for="e-title">Название *</label>
+            <input id="e-title" type="text" placeholder="Акустическая гитара…">
+          </div>
+          <div class="field">
+            <label for="e-category">Категория *</label>
+            <select id="e-category"></select>
+          </div>
+          <div class="field">
+            <label for="e-price">Цена, ₽ *</label>
+            <input id="e-price" type="number" min="0" step="1">
+          </div>
+          <div class="field">
+            <label for="e-old-price">Старая цена, ₽</label>
+            <input id="e-old-price" type="number" min="0" step="1" placeholder="не показывать">
+          </div>
+          <div class="field">
+            <label for="e-badge">Плашка</label>
+            <select id="e-badge">
+              <option value="">нет</option>
+              <option value="Хит">Хит</option>
+              <option value="Новинка">Новинка</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="e-stock">Остаток, шт. *</label>
+            <input id="e-stock" type="number" min="0" step="1">
+            <span class="field__hint">0 — «Нет в наличии», кнопка покупки гаснет.</span>
+          </div>
+          <div class="field">
+            <label for="e-rating">Рейтинг (0–5)</label>
+            <input id="e-rating" type="number" min="0" max="5" step="0.1">
+          </div>
+          <div class="field">
+            <label for="e-reviews">Отзывов</label>
+            <input id="e-reviews" type="number" min="0" step="1">
+          </div>
+          <div class="field field--wide">
+            <label for="e-desc">Описание</label>
+            <textarea id="e-desc" placeholder="Короткое описание для карточки"></textarea>
+          </div>
+          <div class="field field--wide">
+            <label>Характеристики</label>
+            <div class="spec-editor" id="spec-editor"></div>
+            <p style="margin:8px 0 0">
+              <button class="btn btn--ghost" type="button" id="add-spec">+ Добавить характеристику</button>
+            </p>
+          </div>
+          <div class="field field--wide">
+            <label>Картинка товара</label>
+            <div class="image-drop">
+              <img id="e-image-preview" src="assets/img/favicon.svg" alt="Превью товара">
+              <div>
+                <input type="file" id="e-image-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+                <p class="image-drop__text" id="e-image-status" style="margin:8px 0 0">
+                  Можно загрузить PNG, JPEG, WebP, GIF или SVG до 2 МБ.
+                </p>
+                <p style="margin:8px 0 0">
+                  <button class="btn btn--ghost" type="button" id="e-image-clear">Своя картинка не нужна</button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="margin:18px 0 0; display:flex; gap:10px; flex-wrap:wrap">
+          <button class="btn btn--primary" type="button" id="editor-apply">Применить</button>
+          <button class="btn btn--ghost" type="button" id="editor-cancel">Отмена</button>
+        </p>
+      </section>
+
+      <!-- Сохранение -->
+      <div class="admin-actions">
+        <button class="btn btn--primary" type="button" id="save-all">💾 Сохранить данные</button>
+        <button class="btn btn--ghost" type="button" id="download-data">⬇ Скачать catalog.js</button>
+        <button class="btn btn--ghost" type="button" id="make-backup">Создать резервную копию</button>
+        <button class="btn btn--ghost" type="button" id="reset-local">Сбросить локальные правки</button>
+        <span class="admin-actions__status" id="save-status">изменений нет</span>
+      </div>
+
+      <!-- Резервные копии -->
+      <section class="admin-section" style="margin-top:22px">
+        <h2>🕘 Резервные копии</h2>
+        <p class="admin-section__hint">
+          Копия создаётся автоматически перед каждым сохранением, хранятся последние 20.
+        </p>
+        <ul class="backups-list" id="backups-list">
+          <li><span class="muted">Проверяю…</span></li>
+        </ul>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/catalog.js"></script>
+  <script src="assets/js/data-override.js"></script>
+  <script src="assets/js/image-gen.js"></script>
+  <script src="assets/js/data-serialize.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>

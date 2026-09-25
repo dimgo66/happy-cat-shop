@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Товар — Счастливый котик</title>
+  <meta name="description" content="Описание товара в магазине «Счастливый котик».">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="catalog">
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo__cat" aria-hidden="true">🐱</span>
+        <span class="logo__text">Счастливый котик<small>музыка и художество</small></span>
+      </a>
+      <button class="burger" type="button" data-burger aria-label="Меню" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="main-nav" aria-label="Основное меню">
+        <a href="index.html" data-nav="home">Главная</a>
+        <a href="catalog.html" data-nav="catalog">Каталог</a>
+        <a href="index.html#categories" data-nav="categories">Категории</a>
+        <a href="index.html#contacts" data-nav="contacts">Контакты</a>
+      </nav>
+      <a class="cart-link" href="cart.html">
+        <span aria-hidden="true">🛒</span>
+        <span>Корзина</span>
+        <span class="cart-count" data-cart-count data-empty="true">0</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container" id="product-page"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="margin-top:0;border-top:0;padding-top:0">
+        <span>© 2018–2025 «Счастливый котик». Демонстрационный магазин.</span>
+        <span><a href="catalog.html">Вернуться в каталог</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/catalog.js"></script>
+  <script src="assets/js/data-override.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Служебное — не публикуется
+node_modules/
+.backups/
+tools/_admin-test-harness.html
+*.tmp
+
+# Системное и редакторы
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log
+
+# Личные заметки
+заметки*.txt
+TODO*.md
